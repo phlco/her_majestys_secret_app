@@ -24,3 +24,68 @@ bonds.films = [
   { title: "A View to a Kill", year: 1985, actor: "Roger Moore", gross: "$321,172,633" },
   { title: "Licence to Kill", year: 1989, actor: "Timothy Dalton", gross: "$285,157,191" }
 ];
+
+bonds.gross = function(film){
+  var gross = film.gross;
+  return parseInt(gross.slice(1).split(',').join(''));
+};
+
+bonds.getActors = function(){
+  var allActors = _.pluck(bonds.films, 'actor');
+  var uniqueActors = _.uniq(allActors);
+  return uniqueActors;
+};
+
+bonds.totalGross = function(){
+  // get array of each title's gross
+  // get sum
+  var listGross = _.map(bonds.films, function(film) { return bonds.gross(film) });
+  var sum = _.reduce(listGross, function(memo, num) { return memo + num; });
+  return sum;
+};
+
+// bonds.titles = function(options){
+//   var number = options.words;
+//   var allTitles = _.pluck(bonds.films, 'title');
+//   var splitTitles = _.map(allTitles, function(title){
+//     return title.split(' ');
+//   });
+//   var titles = [];
+//   _.each(splitTitles, function(titleArray){
+//     if (titleArray.length === number) {
+//       var title = titleArray.join(' ');
+//       titles.push(title);
+//     }
+//   });
+//   return titles;
+// };
+
+bonds.titles = function(options){
+  var number = options.words;
+
+  var picks = _.filter(bonds.films, function(film){
+    return film.title.split(' ').length === number;
+  });
+  return _.pluck(picks, "title");
+};
+
+bonds.starCount = function(){
+  var actors = _.countBy(bonds.films, function(film){
+    return film.actor;
+  });
+  console.log(actors);
+  return actors;
+};
+
+// _.sortBy(list, iterator, [context])
+bonds.loneliestBond = function(){
+  var actors = bonds.starCount();
+  var loneliestNum = _.min(actors);
+  console.log(loneliestNum);
+  var loneliestGuy = _.contains(actors, 1);
+  console.log(loneliestGuy);
+
+
+};
+
+
