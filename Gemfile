@@ -42,7 +42,7 @@ group :development, :test do
   gem "guard-rspec"
   gem "capybara"
   gem "database_cleaner"
-  gem "capybara-webkit"
+  # gem "capybara-webkit"
   gem "selenium-webdriver"
   gem "jasmine"
   gem "pry-rails"
