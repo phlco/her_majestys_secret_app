@@ -24,3 +24,145 @@ bonds.films = [
   { title: "A View to a Kill", year: 1985, actor: "Roger Moore", gross: "$321,172,633" },
   { title: "Licence to Kill", year: 1989, actor: "Timothy Dalton", gross: "$285,157,191" }
 ];
+
+bonds.gross = function(film) {
+  var gSubbed = parseInt(film.gross.slice(1).split(',').join(''));
+  return gSubbed;
+}
+
+bonds.getActors = function() {
+  var allTheActors = _.pluck(bonds.films, "actor");
+  var uniqueActors = [];
+  _.each(allTheActors, function(el, i) {
+    if (uniqueActors.indexOf(el) === -1) {
+      uniqueActors.push(allTheActors[i]);
+    }
+  });
+  return uniqueActors;
+}
+
+bonds.totalGross = function() {
+  var totalGross = _.pluck(bonds.films, "gross");
+  totalGross = _.map(totalGross, function(el) { return parseInt(el.slice(1).split(',').join(''))});
+  totalGross = _.reduce(totalGross, function(memo, num) {
+    return memo + num;
+  });
+  return totalGross;
+}
+
+bonds.titles = function(obj) {
+  var titles = _.pluck(bonds.films, "title");
+  titles = _.map(titles, function(title) {
+    if (title.split(' ').length === obj.words) {
+      return title;
+    }
+  });
+  titles = _.compact(titles);
+  return titles;
+}
+
+bonds.starCount = function() {
+  var starCount = {};
+  _.each(bonds.films, function(film) {
+    if (starCount[film.actor]) {
+      starCount[film.actor] += 1;
+    } else {
+      starCount[film.actor] = 1;
+    }
+  });
+  return starCount;
+}
+
+bonds.loneliestBond = function() {
+  var starCount = bonds.starCount();
+  var sortable = [];
+  for (var star in starCount) {
+    sortable.push([star, starCount[star]]);
+  }
+  sortable.sort(function(a, b) {return a[1] - b[1]});
+  return sortable[0][0];
+}
+
+bonds.oddBonds = function() {
+  var oddFilms = _.map(bonds.films, function(film) {
+    if (film.year % 2 !== 0) {
+      return film.title;
+    }
+  });
+  oddFilms = _.compact(oddFilms);
+  return oddFilms;
+}
+
+bonds.bestBond = function() {
+  var grossArrays = {};
+  _.each(bonds.films, function(film) {
+    if (grossArrays[film.actor]) {
+      grossArrays[film.actor].push(parseInt(film.gross.slice(1).split(',').join('')));
+    } else {
+      grossArrays[film.actor] = [parseInt(film.gross.slice(1).split(',').join(''))];
+    }
+  });
+
+  var grossAvgs = {};
+
+  _.each(grossArrays, function(key, value) {
+
+    var numFilms = key.length;
+    var totalGross = _.reduce(key, function(memo, num) {
+      return memo + num;
+    });
+    var avgGross = totalGross / numFilms;
+
+    grossAvgs[value] = avgGross;
+  });
+
+  var sortable = [];
+  for (var star in grossAvgs) {
+    sortable.push([star, grossAvgs[star]]);
+  }
+
+  sortable.sort(function(a, b) {return b[1] - a[1]});
+
+  var bestBond = {}
+  bestBond['actor'] = sortable[0][0];
+  bestBond['gross'] = sortable[0][1];
+
+  return bestBond;
+}
+
+bonds.worstBond = function() {
+var grossArrays = {};
+  _.each(bonds.films, function(film) {
+    if (grossArrays[film.actor]) {
+      grossArrays[film.actor].push(parseInt(film.gross.slice(1).split(',').join('')));
+    } else {
+      grossArrays[film.actor] = [parseInt(film.gross.slice(1).split(',').join(''))];
+    }
+  });
+
+  var grossAvgs = {};
+
+  _.each(grossArrays, function(key, value) {
+
+    var numFilms = key.length;
+    var totalGross = _.reduce(key, function(memo, num) {
+      return memo + num;
+    });
+    var avgGross = totalGross / numFilms;
+
+    grossAvgs[value] = avgGross;
+  });
+
+  var sortable = [];
+  for (var star in grossAvgs) {
+    sortable.push([star, grossAvgs[star]]);
+  }
+
+  sortable.sort(function(a, b) {return a[1] - b[1]});
+
+  var bestBond = {}
+  bestBond['actor'] = sortable[0][0];
+  bestBond['gross'] = sortable[0][1];
+
+  return bestBond;
+}
