@@ -73,19 +73,77 @@ bonds.starCount = function(){
   var actors = _.countBy(bonds.films, function(film){
     return film.actor;
   });
-  console.log(actors);
   return actors;
 };
 
 // _.sortBy(list, iterator, [context])
 bonds.loneliestBond = function(){
   var actors = bonds.starCount();
-  var loneliestNum = _.min(actors);
-  console.log(loneliestNum);
-  var loneliestGuy = _.contains(actors, 1);
-  console.log(loneliestGuy);
-
-
+  var paired = _.pairs(actors);
+  // console.log(paired);
+  var loneliestGuy = _.min(paired, function(a){
+    // console.log(a);
+    return a[1];
+    // return a.n;
+  });
+  // debugger;
+  // console.log(loneliestGuy);
+  return loneliestGuy[0];
 };
+
+bonds.oddBonds = function(){
+  // var odds = _.map(bonds.films, function(film){
+  //   if (film.year % 2 !== 0) {
+  //     var title = film.title;
+  //     var year = film.year;
+  //     return film;
+  //   }
+  // });
+  // console.log(odds);
+  // return odds;
+  // filter out years that are odd
+  var odds = _.filter(bonds.films, function(film){return (film.year % 2 !== 0) });
+  console.log(odds);
+  var titles = _.map(odds, function(film){ return film.title });
+  return titles;
+};
+
+bonds.bestBond = function() {
+  return _.max(
+    _.map(_.groupBy(bonds.films, 'actor'), function(films, actor){
+      var numberOfFilms = films.length;
+      var grosses = _.map(films, function(film){
+        return bonds.gross(film);
+      });
+      var totalGross = _.reduce(grosses, function(memo, num){
+        return memo + num;
+      });
+      var average = totalGross/numberOfFilms;
+      return { actor: actor, gross: average };
+      }), function(actor){
+      return actor.gross;
+      }
+  );
+};
+
+bonds.worstBond = function() {
+  return _.min(
+    _.map(_.groupBy(bonds.films, 'actor'), function(films, actor){
+      var numberOfFilms = films.length;
+      var grosses = _.map(films, function(film){
+        return bonds.gross(film);
+      });
+      var totalGross = _.reduce(grosses, function(memo, num){
+        return memo + num;
+      });
+      var average = totalGross/numberOfFilms;
+      return { actor: actor, gross: average };
+      }), function(actor){
+      return actor.gross;
+      }
+  );
+};
+
+
 
 

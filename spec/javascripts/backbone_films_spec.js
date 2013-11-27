@@ -1,4 +1,4 @@
-xdescribe("model and collection", function(){
+describe("model and collection", function(){
 
   describe("Film", function(){
 
