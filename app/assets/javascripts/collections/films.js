@@ -44,10 +44,111 @@ var Films = Backbone.Collection.extend({
     });
     return totalGross;
   },
-  titles: function( options ) {
+  titles: function( wordshash ) {
+    var wordNum = wordshash.words;
+    var allTitles = [];
+    _.each(this.films, function(film){
+      allTitles.push(film.query.title);
+    });
+  // debugger;
+  var correctTitles = [];
+  _.each(allTitles, function( title ) {
+    var titleArray = title.split(' ');
+    if( titleArray.length == wordNum ){
+      correctTitles.push(title);
+    }
+  });
+  return correctTitles;
 
+},
+starCount: function() {
+  var actors = this.getActors();
+  // debugger;
+  var that = this;
+  var starCount = {};
+  _.each(actors, function(actorName ){
 
-  }
+    theirMovies = _.filter(that.films, function( film ){
+      return film.query.actor == actorName;
+    });
+    // debugger;
+    starCount[actorName] = theirMovies.length;
+  });
+  return starCount;
+},
+loneliestBond: function() {
+  var actorHash = this.starCount();
+  var lonliestBond;
+  var lastAmt = 100000000;
+  _.each(actorHash, function(value, key){
+    // debugger;
+    if( value < lastAmt ) {
+      lonliestBond = key;
+      lastAmt = value;
+    }
+  });
+  return lonliestBond;
+},
+oddBonds: function() {
+  var oddBonds = _.reject(this.films, function(film) {
+    return film.query.year % 2 === 0;
+  });
+
+  var titleArray = _.map(oddBonds, function( film ) {
+    return film.query.title;
+  });
+  return titleArray;
+},
+bestBond: function() {
+  var actors = this.getActors();
+  // debugger;
+  var that = this;
+  var starCount = [];
+  _.each(actors, function(actorName ){
+    // debugger;
+    theirMovies = _.filter(that.films, function( film ){
+      return film.query.actor == actorName;
+    });
+    // debugger;
+    var theirGross = 0;
+    console.log(theirGross);
+    _.each(theirMovies, function(movie){
+      // debugger;
+      theirGross += movie.gross();
+    });
+    starCount.push( {actor: actorName, gross: theirGross / theirMovies.length} );
+// debugger;
+});
+
+  var bond = _.max(starCount, function(bond){ return bond.gross;});
+
+  return bond;
+},
+worstBond: function(){
+
+  var actors = this.getActors();
+  var that = this;
+//   // debugger;
+  var starCount = [];
+  _.each(actors, function(actorName ){
+//     // debugger;
+    theirMovies = _.filter(that.films, function(film){
+      return film.query.actor == actorName;
+    });
+    var theirGross = 0;
+//     console.log(theirGross);
+    _.each(theirMovies, function(movie){
+      // debugger;
+      theirGross += movie.gross();
+    });
+    starCount.push( {actor: actorName, gross: theirGross / theirMovies.length} );
+// // debugger;
+});
+
+  var bond = _.min(starCount, function(bond){ return bond.gross;});
+
+  return bond;
+}
 });
 
 
