@@ -40,9 +40,9 @@ gem 'jquery-rails'
 group :development, :test do
   gem "rspec-rails"
   gem "guard-rspec"
-  gem "capybara"
+  # gem "capybara"
   gem "database_cleaner"
-  gem "capybara-webkit"
+  # gem "capybara-webkit"
   gem "selenium-webdriver"
   gem "jasmine"
   gem "pry-rails"

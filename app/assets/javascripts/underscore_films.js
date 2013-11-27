@@ -24,3 +24,122 @@ bonds.films = [
   { title: "A View to a Kill", year: 1985, actor: "Roger Moore", gross: "$321,172,633" },
   { title: "Licence to Kill", year: 1989, actor: "Timothy Dalton", gross: "$285,157,191" }
 ];
+
+// function gross(film){
+//   film.
+//   gross = gross.substring(1);
+//   return parseInt(gross.split(',').join(''));
+// }
+
+function grossOfFilm(film){
+  var gross = film.gross;
+  gross = gross.substring(1);
+  return parseInt(gross.split(',').join(''));
+}
+
+bonds.gross = function(film){
+  var gross = film.gross;
+  gross = gross.substring(1);
+  return parseInt(gross.split(',').join(''));
+};
+
+bonds.getActors = function(){
+  var actorsRepeated = _.pluck(this.films, "actor");
+  uniqActors = _.uniq(actorsRepeated);
+  return uniqActors;
+};
+
+bonds.totalGross = function(){
+  // iterates through the films, returning an array where the 'gross' string values have been converted into integers
+  var arrayOfGrosses= _.map(this.films, function(film) { return bonds.gross(film); });
+  // adds up all the grosses and returns the total
+  var totalGross = _.reduce(arrayOfGrosses, function(memo, num){return memo+num;});
+  return totalGross;
+};
+
+bonds.titles = function(options){
+  var num = options.words;
+  matchesSpecs = []
+  var titles = _.pluck(this.films, "title");
+  var titlesSplit = _.map(titles, function(title) { return title.split(' ')});
+  _.map(titlesSplit, function(arrayOfWords) {
+      if (arrayOfWords.length == num ) {
+        var titlePushedTogether = arrayOfWords.join(' ');
+        matchesSpecs.push(titlePushedTogether);
+      } // if-statement code block
+    }); // iterator function for map
+
+  return matchesSpecs;
+};
+
+
+bonds.starCount = function(){
+  var movieCount = _.countBy(this.films, function(film){
+    return film.actor;
+  });
+    return movieCount;
+};
+
+bonds.loneliestBond = function(){
+ var movieCount = this.starCount();
+ var lowestCount = _.min(movieCount);
+ return findByKey(movieCount, lowestCount);
+};
+
+function findByKey(object, value){
+  var matchedKeys = [];
+  _.each(_.keys(object), function(key){
+    var currentValue = object[key];
+    if (currentValue === value){
+      matchedKeys.push(key);
+    }
+  });
+  return matchedKeys.join();
+}
+
+bonds.oddBonds = function() {
+  var oddYearFilms = _.filter(this.films, function(film){ return film.year % 2 != 0; });
+  arrayOfTitles = _.map(oddYearFilms, function(film){
+    return film.title;
+  });
+  return arrayOfTitles;
+};
+
+bonds.bestBond = function(){
+  var highestGrossAverage = 0;
+  var best = {};
+  var filmsByActorObject = _.groupBy(this.films, function(film){ return film.actor});
+  _.each(filmsByActorObject, function(value, key, list){
+     if (calcGrossAverage(value) > highestGrossAverage) {
+      highestGrossAverage = calcGrossAverage(value);
+      best.actor = key;
+      best.gross = calcGrossAverage(value);
+     }
+  });
+  return best;
+
+}; // bestBond()
+
+function calcGrossAverage(arrayOfMovies) {
+  var sum = 0;
+      arraySize = arrayOfMovies.length;
+  _.each(arrayOfMovies, function(e, i, l){
+    sum = sum + grossOfFilm(e);
+  }); // _.each(arrayOfMovies)
+  return sum / arraySize;
+} // calcGrossAverage
+
+bonds.worstBond = function(){
+  var lowestGrossAverage = 10000000000000000000;
+  var worst = {};
+  var filmsByActorObject = _.groupBy(this.films, function(film){ return film.actor});
+  _.each(filmsByActorObject, function(value, key, list){
+     if (calcGrossAverage(value) < lowestGrossAverage) {
+      lowestGrossAverage = calcGrossAverage(value);
+      worst.actor = key;
+      worst.gross = calcGrossAverage(value);
+     }
+  }); // _.each
+  return worst;
+}
+
