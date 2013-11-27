@@ -106,13 +106,11 @@ bonds.bestBond = function() {
   var grossAvgs = {};
 
   _.each(grossArrays, function(key, value) {
-
     var numFilms = key.length;
     var totalGross = _.reduce(key, function(memo, num) {
       return memo + num;
     });
     var avgGross = totalGross / numFilms;
-
     grossAvgs[value] = avgGross;
   });
 
@@ -131,7 +129,7 @@ bonds.bestBond = function() {
 }
 
 bonds.worstBond = function() {
-var grossArrays = {};
+  var grossArrays = {};
   _.each(bonds.films, function(film) {
     if (grossArrays[film.actor]) {
       grossArrays[film.actor].push(parseInt(film.gross.slice(1).split(',').join('')));
@@ -143,13 +141,11 @@ var grossArrays = {};
   var grossAvgs = {};
 
   _.each(grossArrays, function(key, value) {
-
     var numFilms = key.length;
     var totalGross = _.reduce(key, function(memo, num) {
       return memo + num;
     });
     var avgGross = totalGross / numFilms;
-
     grossAvgs[value] = avgGross;
   });
 
@@ -160,9 +156,9 @@ var grossArrays = {};
 
   sortable.sort(function(a, b) {return a[1] - b[1]});
 
-  var bestBond = {}
-  bestBond['actor'] = sortable[0][0];
-  bestBond['gross'] = sortable[0][1];
+  var worstBond = {}
+  worstBond['actor'] = sortable[0][0];
+  worstBond['gross'] = sortable[0][1];
 
-  return bestBond;
+  return worstBond;
 }
