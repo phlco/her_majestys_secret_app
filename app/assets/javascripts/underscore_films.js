@@ -24,3 +24,80 @@ bonds.films = [
   { title: "A View to a Kill", year: 1985, actor: "Roger Moore", gross: "$321,172,633" },
   { title: "Licence to Kill", year: 1989, actor: "Timothy Dalton", gross: "$285,157,191" }
 ];
+
+bonds.getFilm = function( title ) { return _.findWhere(bonds.films, {title: title}) }
+
+bonds.gross = function( film ) {
+  return parseInt( film.gross.replace(/[^0-9]/g, "") )
+}
+
+bonds.getActors = function() {
+   return _.uniq(_.map(bonds.films, function(a,b,c) {
+    return a.actor
+  }))
+}
+
+bonds.totalGross = function() {
+  return _.reduce(bonds.films, function(memo,num) {
+    return memo + bonds.gross( num )
+  }, 0)
+}
+
+bonds.titles = function(query) {
+  var n = query['words']
+  films =  _.filter(bonds.films, function(film) {
+    return film.title.split(" ").length == n
+  })
+  return _.map(films, function(film) {return film.title})
+}
+
+bonds.starCount = function() {
+  var starCount = {}
+  _.each(bonds.films, function(film) {
+    if (starCount[film.actor] !== undefined) {
+      starCount[film.actor]++;
+    } else {
+      starCount[film.actor] = 1
+    }
+  })
+  return starCount
+}
+
+bonds.loneliestBond = function() {
+  sorted = _.pairs(bonds.starCount())
+  return _.sortBy(sorted, function(a){ return a[1]})[0][0]
+}
+
+bonds.oddBonds = function() {
+  var films = _.filter(bonds.films, function(film) {
+    return film.year % 2 == 1
+  })
+  return _.map(films, function(film) {return film.title})
+}
+
+bonds.bestBond = function() {
+  var sortedAverages = bonds.actorsByAverageGross();
+  sortedAverages = sortedAverages[sortedAverages.length-1]
+  return {actor: sortedAverages[0], gross: sortedAverages[1]}
+}
+
+bonds.worstBond = function() {
+  var sortedAverages = bonds.actorsByAverageGross();
+  sortedAverages = sortedAverages[0]
+  return {actor: sortedAverages[0], gross: sortedAverages[1]}
+}
+
+bonds.actorsByAverageGross = function() {
+  var starCount = bonds.starCount()
+  averages = _.map(bonds.getActors(), function(actor) {
+    var movies = _.where(bonds.films, { actor: actor });
+    var totalGross =  _.reduce(movies, function(memo,movie) {
+      return memo + bonds.gross( movie )
+    }, 0)
+    var count = starCount[actor]
+    var average = totalGross/count
+    return [actor, average]
+  })
+
+  return  _.sortBy(averages, function(a){ return a[1]})
+}
