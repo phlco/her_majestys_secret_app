@@ -25,9 +25,10 @@ bonds.films = [
   { title: "Licence to Kill", year: 1989, actor: "Timothy Dalton", gross: "$285,157,191" }
 ];
 
+bonds.getFilm = function( title ) { return _.findWhere(bonds.films, {title: title}) }
+
 bonds.gross = function( film ) {
-  var gross = parseInt( film.gross.replace(/[^0-9]/g, "") )
-  return gross
+  return parseInt( film.gross.replace(/[^0-9]/g, "") )
 }
 
 bonds.getActors = function() {
