@@ -1,4 +1,4 @@
-xdescribe("model and collection", function(){
+describe("model and collection", function(){
 
   describe("Film", function(){
 
@@ -7,7 +7,7 @@ xdescribe("model and collection", function(){
 
     describe(".gross()", function(){
       it("converts gross to a number", function(){
-        expect( film.gross() ).toEqual(1108561008);
+        expect( film.gross() ).toEqual(756544419);
       });
     });
 
@@ -15,7 +15,7 @@ xdescribe("model and collection", function(){
 
   describe("Films", function(){
 
-    var films = new Films( bond.films );
+    var films = new Films( bonds.films );
 
     describe(".getActors()", function(){
       it("returns all the Actors' names without duplicates", function(){

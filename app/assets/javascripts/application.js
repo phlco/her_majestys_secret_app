@@ -8,4 +8,6 @@
 //= require handlebars
 //= require underscore
 //= require backbone
+//= require collections/films
+//= require collections/helpers
 //= require app
