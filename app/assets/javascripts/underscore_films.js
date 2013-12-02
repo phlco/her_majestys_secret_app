@@ -124,7 +124,7 @@ function calcGrossAverage(arrayOfMovies) {
   var sum = 0;
       arraySize = arrayOfMovies.length;
   _.each(arrayOfMovies, function(e, i, l){
-    sum = sum + grossOfFilm(e);
+    sum = sum + e.grossOfFilm(e);
   }); // _.each(arrayOfMovies)
   return sum / arraySize;
 } // calcGrossAverage
